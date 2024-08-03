@@ -193,6 +193,7 @@ public class MerchantStoreApi {
 		}
 
 		ReadableMerchantStoreList list = storeFacade.findAll(criteria, language, page, count);
+
 		return list.getData();
 
 	}

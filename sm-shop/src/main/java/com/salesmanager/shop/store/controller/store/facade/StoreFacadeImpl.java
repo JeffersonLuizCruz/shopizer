@@ -346,7 +346,7 @@ public class StoreFacadeImpl implements StoreFacade {
 		configTO.setKey(config.getKey());
 		configTO.setMerchantConfigurationType(configurationType);
 		configTO.setValue(config.getValue());
-		configTO.setActive(new Boolean(config.isActive()));
+		configTO.setActive(config.isActive());
 		return configTO;
 	}
 
@@ -488,13 +488,16 @@ public class StoreFacadeImpl implements StoreFacade {
 			Optional<String> code = Optional.ofNullable(criteria.getStoreCode());
 			Optional<String> name = Optional.ofNullable(criteria.getName());
 			if(code.isPresent()) {
-				
+
 				stores = merchantStoreService.listByGroup(name, code.get(), page, count);
 
 			} else {
 				if(criteria.isRetailers()) {
+
 					stores = merchantStoreService.listAllRetailers(name, page, count);
+
 				} else {
+
 					stores = merchantStoreService.listAll(name, page, count);
 				}
 			}
