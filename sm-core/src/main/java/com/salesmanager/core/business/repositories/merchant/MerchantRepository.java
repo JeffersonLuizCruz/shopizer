@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.merchant.MerchantStore;
+import org.springframework.data.repository.query.Param;
 
 public interface MerchantRepository extends JpaRepository<MerchantStore, Integer>, MerchantRepositoryCustom {
 
@@ -16,8 +17,8 @@ public interface MerchantRepository extends JpaRepository<MerchantStore, Integer
 			+ "left join fetch m.currency mc "
 			+ "left join fetch m.zone mz "
 			+ "left join fetch m.defaultLanguage md "
-			+ "left join fetch m.languages mls where m.code = ?1")
-	MerchantStore findByCode(String code);
+			+ "left join fetch m.languages mls where m.code = :code")
+	MerchantStore findByCode(@Param("code") String code);
 	
 	@Query("select m from MerchantStore m left join fetch m.parent mp left join fetch m.country mc left join fetch m.currency mc left join fetch m.zone mz left join fetch m.defaultLanguage md left join fetch m.languages mls where m.id = ?1")
 	MerchantStore getById(int id);
@@ -33,8 +34,8 @@ public interface MerchantRepository extends JpaRepository<MerchantStore, Integer
 	List<MerchantStore> findAllStoreNames();
 	
 	 @Query(value = "select new com.salesmanager.core.model.merchant.MerchantStore(m.id, m.code, m.storename) from MerchantStore m left join m.parent mp "
-	  			+ "where mp.code = ?1 or m.code = ?1")
-	List<MerchantStore> findAllStoreNames(String storeCode);
+	  			+ "where mp.code = :storecode or m.code = :storecode")
+	List<MerchantStore> findAllStoreNames(@Param("storecode") String storecode);
 	 
 	 @Query(value = "select new com.salesmanager.core.model.merchant.MerchantStore(m.id, m.code, m.storename) from MerchantStore m left join m.parent mp "
 	  			+ "where mp.code in ?1 or m.code in ?1")
