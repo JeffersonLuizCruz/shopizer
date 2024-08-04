@@ -7,81 +7,82 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.category.Category;
+import org.springframework.data.repository.query.Param;
 
 
 public interface CategoryRepository extends JpaRepository<Category, Long>, CategoryRepositoryCustom {
 	
 
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.seUrl like ?2 and cm.id = ?1 order by c.sortOrder asc")
-	List<Category> listByFriendlyUrl(Integer storeId, String friendlyUrl);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.seUrl like :friendlyUrl and cm.id = :storeId order by c.sortOrder asc")
+	List<Category> listByFriendlyUrl(@Param("storeId") Integer storeId, @Param("friendlyUrl") String friendlyUrl);
 	
 	@Query("select c from Category c left join fetch c.descriptions cd "
 			+ "join fetch cd.language cdl join fetch c.merchantStore cm "
-			+ "where cd.seUrl=?2 and cdl.id=?3 and cm.id = ?1")
-	Category findByFriendlyUrl(Integer storeId, String friendlyUrl, Integer languageId);
+			+ "where cd.seUrl=:friendlyUrl and cdl.id=:languageId and cm.id = :storeId")
+	Category findByFriendlyUrl(@Param("storeId") Integer storeId, @Param("friendlyUrl") String friendlyUrl, @Param("languageId") Integer languageId);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.name like %?2% and cdl.id=?3 and cm.id = ?1 order by c.sortOrder asc")
-	List<Category> findByName(Integer storeId, String name, Integer languageId);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.name like %:name% and cdl.id=:languageId and cm.id = :storeId order by c.sortOrder asc")
+	List<Category> findByName(@Param("storeId") Integer storeId, @Param("name") String name, @Param("languageId") Integer languageId);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.code=?2 and cm.id = ?1")
-	Category findByCode(Integer storeId, String code);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.code=:code and cm.id = :storeId")
+	Category findByCode(@Param("storeId") Integer storeId, @Param("code") String code);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.code in (?2) and cdl.id=?3 and cm.id = ?1 order by c.sortOrder asc")
-	List<Category> findByCodes(Integer storeId, List<String> codes, Integer languageId);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.code in (:codes) and cdl.id=:languageId and cm.id = :storeId order by c.sortOrder asc")
+	List<Category> findByCodes(@Param("storeId") Integer storeId, @Param("codes") List<String> codes, @Param("languageId") Integer languageId);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.id in (?2) and cdl.id=?3 and cm.id = ?1 order by c.sortOrder asc")
-	List<Category> findByIds(Integer storeId, List<Long> ids, Integer languageId);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.id in (:ids) and cdl.id=:languageId and cm.id = :storeId order by c.sortOrder asc")
+	List<Category> findByIds(@Param("storeId") Integer storeId, @Param("ids") List<Long> ids, @Param("languageId") Integer languageId);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where cm.id=?1 and c.id = ?2 and cdl.id=?3")
-	Category findById(Integer storeId, Long categoryId, Integer languageId);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where cm.id=:storeId and c.id = :categoryId and cdl.id=:languageId")
+	Category findById(@Param("storeId") Integer storeId, @Param("categoryId") Long categoryId, @Param("languageId") Integer languageId);
 	
 	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = ?1 and cdl.id=?2")
 	Category findByIdAndLanguage(Long categoryId, Integer languageId);
 	
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = ?1 and cm.id=?2")
-	Category findByIdAndStore(Long categoryId, Integer storeId);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = :categoryId and cm.id=:storeId")
+	Category findByIdAndStore(@Param("categoryId") Long categoryId, @Param("storeId") Integer storeId);
 	
-	@Query("select c from Category c left join fetch c.parent cp left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where cm.code=?2 and c.id = ?1")
-	Category findById(Long categoryId, String merchant);
+	@Query("select c from Category c left join fetch c.parent cp left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where cm.code=:merchant and c.id = :categoryId")
+	Category findById(@Param("categoryId") Long categoryId, @Param("merchant") String merchant);
 	
-	@Query("select c from Category c left join fetch c.parent cp left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = ?1")
-	Optional<Category> findById(Long categoryId);
+	@Query("select c from Category c left join fetch c.parent cp left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.categories where c.id = :categoryId")
+	Optional<Category> findById(@Param("categoryId") Long categoryId);
 
-	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code=?1 and c.code=?2")
-	Category findByCode(String merchantStoreCode, String code);
+	@Query("select c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code=:merchantStoreCode and c.code=:code")
+	Category findByCode(@Param("merchantStoreCode") String merchantStoreCode, @Param("code") String code);
 	
-	@Query("select c from Category c join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.id=?1")
-	Category findOne(Long categoryId);
+	@Query("select c from Category c join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where c.id=:categoryId")
+	Category findOne(@Param("categoryId") Long categoryId);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and c.lineage like %?2% order by c.lineage, c.sortOrder asc")
-	List<Category> findByLineage(Integer merchantId, String linenage);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and c.lineage like %:linenage% order by c.lineage, c.sortOrder asc")
+	List<Category> findByLineage(@Param("merchantId") Integer merchantId, @Param("linenage") String linenage);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code= ?1 and c.lineage like %?2% order by c.lineage, c.sortOrder asc")
-	List<Category> findByLineage(String storeCode, String linenage);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.code= :storeCode and c.lineage like %:linenage% order by c.lineage, c.sortOrder asc")
+	List<Category> findByLineage(@Param("storeCode") String storeCode, @Param("linenage") String linenage);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and c.depth >= ?2 order by c.lineage, c.sortOrder asc")
-	List<Category> findByDepth(Integer merchantId, int depth);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and c.depth >= :depth order by c.lineage, c.sortOrder asc")
+	List<Category> findByDepth(@Param("merchantId") Integer merchantId, @Param("depth") int depth);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?3 and c.depth >= ?2 order by c.lineage, c.sortOrder asc")
-	List<Category> findByDepth(Integer merchantId, int depth, Integer languageId);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and cdl.id=:languageId and c.depth >= :depth order by c.lineage, c.sortOrder asc")
+	List<Category> findByDepth( @Param("merchantId") Integer merchantId, @Param("depth") int depth, @Param("languageId") Integer languageId);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?3 and c.depth >= ?2 and (?4 is null or cd.name like %?4%) order by c.lineage, c.sortOrder asc")
-	List<Category> find(Integer merchantId, int depth, Integer languageId, String name);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and cdl.id=:languageId and c.depth >= :depth and (:name is null or cd.name like %:name%) order by c.lineage, c.sortOrder asc")
+	List<Category> find(@Param("merchantId") Integer merchantId, @Param("depth") int depth, @Param("languageId") Integer languageId, @Param("name") String name);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?3 and c.depth >= ?2 and c.featured=true order by c.lineage, c.sortOrder asc")
-	List<Category> findByDepthFilterByFeatured(Integer merchantId, int depth, Integer languageId);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and cdl.id=:languageId and c.depth >= :depth and c.featured=true order by c.lineage, c.sortOrder asc")
+	List<Category> findByDepthFilterByFeatured(@Param("merchantId") Integer merchantId, @Param("depth") int depth, @Param("languageId") Integer languageId);
 
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.parent cp where cp.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
-	List<Category> findByParent(Long parentId, Integer languageId);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.parent cp where cp.id=:parentId and cdl.id=:languageId order by c.lineage, c.sortOrder asc")
+	List<Category> findByParent(@Param("parentId") Long parentId, @Param("languageId") Integer languageId);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
-	List<Category> findByStore(Integer merchantId, Integer languageId);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId and cdl.id=:languageId order by c.lineage, c.sortOrder asc")
+	List<Category> findByStore(@Param("merchantId") Integer merchantId, @Param("languageId") Integer languageId);
 	
-	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 order by c.lineage, c.sortOrder asc")
-	List<Category> findByStore(Integer merchantId);
+	@Query("select distinct c from Category c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=:merchantId order by c.lineage, c.sortOrder asc")
+	List<Category> findByStore(@Param("merchantId") Integer merchantId);
 	
-	@Query("select count(distinct c) from Category as c where c.merchantStore.id=?1")
-	int count(Integer storeId);
+	@Query("select count(distinct c) from Category as c where c.merchantStore.id=:storeId")
+	int count(@Param("storeId") Integer storeId);
 
 
 	
