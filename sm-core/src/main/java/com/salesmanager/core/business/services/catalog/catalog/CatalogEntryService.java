@@ -16,6 +16,6 @@ public interface CatalogEntryService extends SalesManagerEntityService<Long, Cat
 	
 	void remove (CatalogCategoryEntry catalogEntry) throws ServiceException;
 	
-	Page<CatalogCategoryEntry> list(Catalog catalog, MerchantStore store, Language language, String name, int page, int count);
+	Page<CatalogCategoryEntry> list(Catalog catalog, MerchantStore store, Language language, int page, int count);
 
 }

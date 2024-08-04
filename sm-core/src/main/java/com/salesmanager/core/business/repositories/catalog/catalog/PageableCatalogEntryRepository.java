@@ -30,7 +30,7 @@ public interface PageableCatalogEntryRepository extends PagingAndSortingReposito
 		  		+ "clm.id=:storeId and "
 		  		+ "ccd.language.id=:languageId",
 			      countQuery = "select  count(c) from CatalogCategoryEntry c join c.category cc join c.catalog cl join cl.merchantStore clm join cc.descriptions ccd where cl.id=:catalogId and clm.id=:storeId and ccd.language.id=:languageId")
-		  Page<CatalogCategoryEntry> listByCatalog(@Param("catalogId") Long catalogId, @Param("storeId") Integer storeId, @Param("languageId") Integer languageId, String name, Pageable pageable);
+		  Page<CatalogCategoryEntry> listByCatalog(@Param("catalogId") Long catalogId, @Param("storeId") Integer storeId, @Param("languageId") Integer languageId, Pageable pageable);
 
 	
 }

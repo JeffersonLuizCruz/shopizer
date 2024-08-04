@@ -40,10 +40,10 @@ implements CatalogEntryService {
 
 
 	@Override
-	public Page<CatalogCategoryEntry> list(Catalog catalog, MerchantStore store, Language language, String name, int page,
+	public Page<CatalogCategoryEntry> list(Catalog catalog, MerchantStore store, Language language, int page,
 			int count) {
 		Pageable pageRequest = PageRequest.of(page, count);
-		return pageableCatalogEntryRepository.listByCatalog(catalog.getId(), store.getId(), language.getId(), name, pageRequest);
+		return pageableCatalogEntryRepository.listByCatalog(catalog.getId(), store.getId(), language.getId(), pageRequest);
 
 	}
 
