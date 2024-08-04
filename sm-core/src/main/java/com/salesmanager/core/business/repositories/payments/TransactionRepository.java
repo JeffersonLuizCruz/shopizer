@@ -12,8 +12,8 @@ import com.salesmanager.core.model.payments.Transaction;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-	@Query("select t from Transaction t join fetch t.order to where to.id = ?1")
-	List<Transaction> findByOrder(Long orderId);
+	@Query("select t from Transaction t join fetch t.order to where to.id = :orderId")
+	List<Transaction> findByOrder(@Param("orderId") Long orderId);
 	
 	@Query("select t from Transaction t join fetch t.order to left join fetch to.orderAttributes toa left join fetch to.orderProducts too left join fetch to.orderTotal toot left join fetch to.orderHistory tood where to is not null and t.transactionDate BETWEEN :from AND :to")
 	List<Transaction> findByDates(
