@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface ShippingQuoteRepository extends JpaRepository<Quote, Long> {
 	
 	
-	@Query("select q from Quote as q where q.orderId = ?1")
+	@Query("select q from Quote as q where q.orderId = :order")
 	List<Quote> findByOrder(@Param("order") Long order);
 
 }
