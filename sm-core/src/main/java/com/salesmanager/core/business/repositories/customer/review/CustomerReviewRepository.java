@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.customer.review.CustomerReview;
+import org.springframework.data.repository.query.Param;
 
 public interface CustomerReviewRepository extends JpaRepository<CustomerReview, Long> {
 	
@@ -19,17 +20,17 @@ public interface CustomerReviewRepository extends JpaRepository<CustomerReview, 
 			+ "left join fetch r.descriptions rd ";
 
 
-	@Query("select r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where r.id = ?1")
-	CustomerReview findOne(Long id);
+	@Query("select r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where r.id = :id")
+	CustomerReview findOne(@Param("id") Long id);
 	
-	@Query("select distinct r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where rc.id = ?1")
-	List<CustomerReview> findByReviewer(Long id);
+	@Query("select distinct r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where rc.id = :id")
+	List<CustomerReview> findByReviewer(@Param("id") Long id);
 	
-	@Query("select distinct r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where rr.id = ?1")
-	List<CustomerReview> findByReviewed(Long id);
+	@Query("select distinct r from CustomerReview r join fetch r.customer rc join fetch r.reviewedCustomer rr join fetch rc.merchantStore rrm left join fetch r.descriptions rd where rr.id = :id")
+	List<CustomerReview> findByReviewed(@Param("id") Long id);
 	
-	@Query( customerQuery + "where rc.id = ?1 and rr.id = ?2")
-	CustomerReview findByRevieweAndReviewed(Long reviewer, Long reviewed);
+	@Query( customerQuery + "where rc.id = :reviewer and rr.id = :reviewed")
+	CustomerReview findByRevieweAndReviewed(@Param("reviewer") Long reviewer, @Param("reviewed") Long reviewed);
 
 	
 	
