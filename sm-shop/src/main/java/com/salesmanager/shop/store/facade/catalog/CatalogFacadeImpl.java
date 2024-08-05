@@ -164,11 +164,12 @@ public class CatalogFacadeImpl implements CatalogFacade {
     public ReadableEntityList<ReadableCatalogCategoryEntry> listCatalogEntry(Optional<String> product, Long id, MerchantStore store, Language language, int page, int count) {
         Validate.notNull(store, "MerchantStore cannot be null");
 
-        String productCode = product.orElse(null);
+        String productCode = product.orElse(null); // Variável removida por não fazer sentido
+
         Catalog catalog = catalogService.getById(id, store)
                 .orElseThrow(() -> new ResourceNotFoundException("Catalog with id [" + id + "] not found for store [" + store.getCode() + "]"));
 
-        Page<CatalogCategoryEntry> entries = catalogEntryService.list(catalog, store, language, productCode, page, count);
+        Page<CatalogCategoryEntry> entries = catalogEntryService.list(catalog, store, language, page, count);
 
         if (entries.isEmpty()) {
             return new ReadableEntityList<>();
