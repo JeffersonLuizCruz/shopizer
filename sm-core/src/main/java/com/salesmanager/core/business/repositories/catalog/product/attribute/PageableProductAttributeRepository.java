@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.salesmanager.core.model.catalog.category.Category;
 import com.salesmanager.core.model.catalog.product.attribute.ProductAttribute;
+import org.springframework.data.repository.query.Param;
 
 public interface PageableProductAttributeRepository extends PagingAndSortingRepository<Category, Long> {
 
@@ -17,13 +18,13 @@ public interface PageableProductAttributeRepository extends PagingAndSortingRepo
 			+ "left join fetch po.descriptions pod "
 			+ "left join fetch pov.descriptions povd "
 			+ "left join fetch po.merchantStore pom "
-			+ "where pom.id = ?1 and pr.id = ?2 and povd.language.id = ?3",
+			+ "where pom.id = :storeId and pr.id = :productId and povd.language.id = :languageId",
       countQuery = "select  count(p) "
       		+ "from ProductAttribute p "
       		+ "join p.product pr "
       		+ "join pr.merchantStore pm "
-      		+ "where pm.id = ?1 and pr.id = ?2")
-	Page<ProductAttribute> findByProductId(Integer storeId, Long productId, Integer languageId, Pageable pageable);
+      		+ "where pm.id = :storeId and pr.id = :productId")
+	Page<ProductAttribute> findByProductId(@Param("storeId") Integer storeId,@Param("productId") Long productId, @Param("languageId") Integer languageId, Pageable pageable);
 	
 	@Query(value = "select distinct p from ProductAttribute p "
 			+ "join fetch p.product pr "
@@ -32,12 +33,12 @@ public interface PageableProductAttributeRepository extends PagingAndSortingRepo
 			+ "left join fetch po.descriptions pod "
 			+ "left join fetch pov.descriptions povd "
 			+ "left join fetch po.merchantStore pom "
-			+ "where pom.id = ?1 and pr.id = ?2",
+			+ "where pom.id = :storeId and pr.id = :productId",
       countQuery = "select  count(p) "
       		+ "from ProductAttribute p "
       		+ "join p.product pr "
       		+ "join pr.merchantStore pm "
-      		+ "where pm.id = ?1 and pr.id = ?2")
-	Page<ProductAttribute> findByProductId(Integer storeId, Long productId, Pageable pageable);
+      		+ "where pm.id = :storeId and pr.id = :productId")
+	Page<ProductAttribute> findByProductId(@Param("storeId") Integer storeId, @Param("productId") Long productId, Pageable pageable);
 
 }
