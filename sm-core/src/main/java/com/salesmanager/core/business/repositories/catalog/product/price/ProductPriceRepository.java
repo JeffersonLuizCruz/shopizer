@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.product.price.ProductPrice;
+import org.springframework.data.repository.query.Param;
 
 public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long> {
 
 	@Query("select p from ProductPrice p " + "left join fetch p.descriptions pd "
 			+ "inner join fetch p.productAvailability pa " + "inner join fetch pa.product pap "
-			+ "inner join fetch pap.merchantStore papm " + "where p.id = ?1")
-	ProductPrice findOne(Long id);
+			+ "inner join fetch pap.merchantStore papm " + "where p.id = :id")
+	ProductPrice findOne(@Param("id") Long id);
 
 	// SELECT distinct pp.PRODUCT_PRICE_AMOUNT, p.SKU
 	// FROM SALESMANAGER.PRODUCT_PRICE AS pp
@@ -32,19 +33,19 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long
 	@Query(value = "select distinct p from ProductPrice p " + "left join fetch p.productAvailability pa "
 			+ "left join fetch pa.merchantStore pm " + "left join fetch p.descriptions pd "
 			+ "join fetch pa.product pap " + "left join fetch pa.productVariant ppi "
-			+ "where pap.sku=?1 or ppi.sku=?1 and pm.code=?2")
-	List<ProductPrice> findByProduct(String sku, String store);
+			+ "where pap.sku=:sku or ppi.sku=:sku and pm.code=:store")
+	List<ProductPrice> findByProduct(@Param("sku") String sku, @Param("") String store);
 
 	@Query(value = "select distinct p from ProductPrice p " + "left join fetch p.productAvailability pa "
 			+ "left join fetch pa.merchantStore pm " + "left join fetch p.descriptions pd "
 			+ "join fetch pa.product pap " + "left join fetch pa.productVariant ppi "
-			+ "where pap.sku=?1 or ppi.sku=?1 and p.id=?2 and pm.code=?3")
-	ProductPrice findByProduct(String sku, Long priceId, String store);
+			+ "where pap.sku=:sku or ppi.sku=:sku and p.id=:priceId and pm.code=:store")
+	ProductPrice findByProduct(@Param("sku") String sku, @Param("priceId") Long priceId, @Param("store") String store);
 
 	@Query(value = "select distinct p from ProductPrice p " + "left join fetch p.productAvailability pa "
 			+ "left join fetch pa.merchantStore pm " + "left join fetch p.descriptions pd "
 			+ "join fetch pa.product pap " + "left join fetch pa.productVariant ppi "
-			+ "where pap.sku=?1 or ppi.sku=?1 and pa.id=?2 and pm.code=?3")
-	List<ProductPrice> findByProductInventoty(String sku, Long ProductInventory, String store);
+			+ "where pap.sku=:sku or ppi.sku=:sku and pa.id=:ProductInventory and pm.code=:store")
+	List<ProductPrice> findByProductInventoty(@Param("sku") String sku, @Param("ProductInventory") Long ProductInventory, @Param("store") String store);
 
 }
