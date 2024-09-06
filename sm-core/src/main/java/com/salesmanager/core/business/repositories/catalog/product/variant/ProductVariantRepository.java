@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import org.springframework.data.repository.query.Param;
 
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long> {
 	
@@ -27,8 +28,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "left join fetch pvpov.descriptions povvpovd "			
 			
 			+ "left join fetch pv.merchantStore pvm "
-			+ "where p.id = ?1 and pvm.id = ?2")
-	Optional<ProductVariant> findOne(Long id, Integer storeId);
+			+ "where p.id = :id and pvm.id = :storeId")
+	Optional<ProductVariant> findOne(@Param("id") Long id, @Param("storeId") Integer storeId);
 	
 	@Query("select p from ProductVariant p join fetch p.product pr "
 			+ "left join fetch p.variation pv "
@@ -44,8 +45,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "left join fetch pvpov.descriptions povvpovd "			
 			
 			+ "left join fetch pv.merchantStore pvm "
-			+ "where p.id in (?1) and pvm.id = ?2")
-	List<ProductVariant> findByIds(List<Long> ids, Integer storeId);
+			+ "where p.id in (:ids) and pvm.id = :storeId")
+	List<ProductVariant> findByIds(@Param("ids") List<Long> ids, @Param("storeId") Integer storeId);
 	
 	
 	@Query("select p from ProductVariant p join fetch p.product pr "
@@ -62,8 +63,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "left join fetch pvpov.descriptions povvpovd "			
 			
 			+ "left join fetch pr.merchantStore prm "
-			+ "where p.id = ?1 and pr.id = ?2 and prm.id = ?3")
-	Optional<ProductVariant> findById(Long id, Long productId, Integer storeId);
+			+ "where p.id = :id and pr.id = :productId and prm.id = :storeId")
+	Optional<ProductVariant> findById(@Param("id") Long id, @Param("productId") Long productId, @Param("storeId") Integer storeId);
 	
 	
 	
@@ -81,12 +82,12 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			+ "left join fetch pvpov.descriptions povvpovd "			
 			
 			+ "left join fetch pr.merchantStore prm "
-			+ "where pvpod.language.id = ?4 "
-			+ "and pvpovd.language.id = ?4 "
-			+ "and povvpod.language.id = ?4 "
-			+ "and povvpovd.language.id = ?4 "
-			+ "and pr.id = ?2 and p.code = ?1 and prm.id = ?3")
-	Optional<ProductVariant> findBySku(String code, Long productId, Integer storeId, Integer languageId);
+			+ "where pvpod.language.id = :languageId "
+			+ "and pvpovd.language.id = :languageId "
+			+ "and povvpod.language.id = :languageId "
+			+ "and povvpovd.language.id = :languageId "
+			+ "and pr.id = :productId and p.code = :code and prm.id = :storeId")
+	Optional<ProductVariant> findBySku(@Param("code") String code, @Param("productId") Long productId, @Param("storeId") Integer storeId, @Param("languageId") Integer languageId);
 	
 	
 	/**
@@ -114,13 +115,13 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 			
 
 			+ "left join fetch pv.merchantStore pvm " 
-			+ "where pr.id = ?2 and pvm.id = ?1")
-	List<ProductVariant> findByProductId(Integer storeId, Long productId);
+			+ "where pr.id = :productId and pvm.id = :storeId")
+	List<ProductVariant> findByProductId(@Param("storeId") Integer storeId, @Param("productId") Long productId);
 
 	
 	
 	@Query("select p from ProductVariant p join fetch p.product pr where p.sku = ?1 and pr.id = ?2")
-	ProductVariant existsBySkuAndProduct(String sku, Long productId);
+	ProductVariant existsBySkuAndProduct(@Param("sku") String sku, @Param("productId") Long productId);
 	
 
 	

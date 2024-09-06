@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.salesmanager.core.model.catalog.product.variant.ProductVariant;
+import org.springframework.data.repository.query.Param;
 
 public interface PageableProductVariantRepositoty extends PagingAndSortingRepository<ProductVariant, Long> {
 
@@ -29,12 +30,12 @@ public interface PageableProductVariantRepositoty extends PagingAndSortingReposi
 			+ "left join fetch pigi.descriptions pigid "
 
 			+ "left join fetch pr.merchantStore prm " 
-			+ "where pr.id = ?2 and prm.id = ?1",
+			+ "where pr.id = :productId and prm.id = :storeId",
 			countQuery = "select p from ProductVariant p "
 			+ "join fetch p.product pr "
 					+ "left join fetch pr.merchantStore prm "
-					+ "where pr.id = ?2 and prm.id = ?1")
-	Page<ProductVariant> findByProductId(Integer storeId, Long productId, Pageable pageable);
+					+ "where pr.id = :productId and prm.id = :storeId")
+	Page<ProductVariant> findByProductId(@Param("storeId") Integer storeId, @Param("productId") Long productId, Pageable pageable);
 
 
 }
